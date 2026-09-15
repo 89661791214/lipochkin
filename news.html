@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новости — Степан Липочкин</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-heading: 'Unbounded', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --bg: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --accent: #2563eb;
+            --accent-2: #0ea5e9;
+            --accent-3: #06b6d4;
+            --accent-lighter: #eff6ff;
+            --flag-blue: #0039a6;
+            --flag-red: #d52b1e;
+            --radius: 20px;
+            --shadow-lg: 0 20px 60px rgba(37, 99, 235, 0.12);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        .nav {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(37, 99, 235, 0.08);
+        }
+        .nav__logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav__logo-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-3));
+            box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
+        }
+        .nav__links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav__links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+        .nav__links a:hover,
+        .nav__links a.active { color: var(--accent); }
+        .nav__burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+        .nav__burger span {
+            display: block;
+            width: 25px; height: 2px;
+            background: var(--text);
+        }
+
+        /* ===== ШАПКА ===== */
+        .news-hero {
+            position: relative;
+            padding: 10rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f6ff 40%, #dbeafe 100%);
+            overflow: hidden;
+        }
+        .news-hero__label {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: rgba(255,255,255,0.8);
+            color: var(--flag-blue);
+            border: 1px solid rgba(0, 57, 166, 0.15);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+        .news-hero__title {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        .news-hero__title span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .news-hero__desc {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .news-hero__ornament {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%;
+            height: 40px;
+            color: var(--accent-2);
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        /* ===== ФИЛЬТРЫ ===== */
+        .filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            padding: 3rem 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .filter-btn {
+            padding: 0.55rem 1.3rem;
+            border-radius: 100px;
+            background: #fff;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            color: var(--text-light);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        /* ===== СЕТКА ===== */
+        .news-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 2rem 6rem;
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.8rem;
+        }
+        .news-card {
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            overflow: hidden;
+            transition: all var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .news-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, #fff, var(--flag-blue), var(--flag-red));
+            z-index: 2;
+        }
+        .news-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-6px);
+            border-color: rgba(37, 99, 235, 0.25);
+        }
+        .news-card__image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background: var(--accent-lighter);
+        }
+        .news-card__body {
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .news-card__meta {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .news-card__tag {
+            display: inline-block;
+            padding: 0.3rem 0.85rem;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+        .tag--forum { background: #dbeafe; color: #2563eb; }
+        .tag--project { background: #e0f2fe; color: #0284c7; }
+        .tag--speech { background: #cffafe; color: #0891b2; }
+        .tag--media { background: #e0e7ff; color: #4f46e5; }
+        .tag--education { background: #fef3c7; color: #d97706; }
+        .tag--personal { background: #fee2e2; color: #dc2626; }
+        .news-card__date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .news-card__title {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.35;
+            margin-bottom: 0.7rem;
+        }
+        .news-card__text {
+            font-size: 0.92rem;
+            color: var(--text-light);
+            line-height: 1.65;
+            flex-grow: 1;
+        }
+
+        /* ===== ФУТЕР ===== */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            border-top: 1px solid rgba(37, 99, 235, 0.08);
+        }
+        .footer__ornament {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--accent-2);
+            opacity: 0.5;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 768px) {
+            .nav__links {
+                display: none;
+                position: absolute;
+                top: 100%; left: 0;
+                width: 100%;
+                background: rgba(255,255,255,0.98);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+            }
+            .nav__links.open { display: flex; }
+            .nav__burger { display: flex; }
+            .news-grid { grid-template-columns: 1fr; }
+            .news-hero { padding: 8rem 1.5rem 3rem; }
+            .news-container { padding: 1rem 1.5rem 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- НАВИГАЦИЯ -->
+    <nav class="nav">
+        <a href="index.html" class="nav__logo">
+            <span class="nav__logo-dot"></span>
+            С. Липочкин
+        </a>
+        <ul class="nav__links">
+            <li><a href="index.html#about">Обо мне</a></li>
+            <li><a href="index.html#education">Образование</a></li>
+            <li><a href="index.html#projects">Проекты</a></li>
+            <li><a href="index.html#leadership">Лидерство</a></li>
+            <li><a href="news.html" class="active">Новости</a></li>
+            <li><a href="index.html#services">Услуги</a></li>
+            <li><a href="index.html#contact">Контакты</a></li>
+        </ul>
+        <button class="nav__burger" aria-label="Меню">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- ШАПКА -->
+    <header class="news-hero">
+        <div class="news-hero__label">Живая лента</div>
+        <h1 class="news-hero__title">Мои <span>новости</span></h1>
+        <p class="news-hero__desc">Форумы, проекты, выступления и события — всё, что происходит в моей жизни и работе.</p>
+        <svg class="news-hero__ornament" viewBox="0 0 1200 40" preserveAspectRatio="none">
+            <defs>
+                <pattern id="folk" x="0" y="0" width="60" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M30 6 L44 20 L30 34 L16 20 Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="30" cy="20" r="2.5" fill="currentColor"/>
+                    <path d="M0 20 L12 20 M48 20 L60 20" stroke="currentColor" stroke-width="1"/>
+                </pattern>
+            </defs>
+            <rect width="1200" height="40" fill="url(#folk)"/>
+        </svg>
+    </header>
+
+    <!-- ФИЛЬТРЫ -->
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">Все</button>
+        <button class="filter-btn" data-filter="forum">Форумы</button>
+        <button class="filter-btn" data-filter="project">Проекты</button>
+        <button class="filter-btn" data-filter="speech">Выступления</button>
+        <button class="filter-btn" data-filter="media">Медиа</button>
+        <button class="filter-btn" data-filter="education">Образование</button>
+        <button class="filter-btn" data-filter="personal">Личное</button>
+    </div>
+
+    <!-- СЕТКА НОВОСТЕЙ -->
+    <main class="news-container">
+        <div class="news-grid" id="newsGrid">
+
+            <!-- ═══════════ НОВОСТЬ 1 ═══════════ -->
+            <article class="news-card" data-category="forum">
+                <img class="news-card__image" src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" alt="ПМЭФ">
+                <div class="news-card__body">
+                    <div class="news-card__meta">
+                        <span class="news-card__tag tag--forum">Форум</span>
+                        <span class="news-card__date">5 июня 2026</span>
+                    </div>
+                    <h2 class="news-card__title">ПМЭФ-2026: единственный школьник из Москвы в делегации Росмолодёжи</h2>
+                    <p class="news-card__text">Стал единственным школьником из Москвы, вошедшим в делегацию Росмолодёжи на Петербургском международном экономическом форуме — 2026. Три дня интенсивной работы: панельные сессии, встречи с руководителями федеральных ведомств, обсуждение молодёжной политики и технологического суверенитета.</p>
+                </div>
+            </article>
+
+            <!-- ═══════════ НОВОСТЬ 2 ═══════════ -->
+            <article class="news-card" data-category="forum">
+                <img class="news-card__image" src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" alt="ВЭФ">
+                <div class="news-card__body">
+                    <div class="news-card__meta">
+                        <span class="news-card__tag tag--forum">Форум</span>
+                        <span class="news-card__date">8 сентября 2025</span>
+                    </div>
+                    <h2 class="news-card__title">Восточный экономический форум — 2025: благодарность Министерства</h2>
+                    <p class="news-card__text">Выступил организатором на Восточном экономическом форуме — 2025 и получил личную благодарность Министерства развития Дальнего Востока. Работал на площадке, посвящённой технологическому развитию региона, координировал молодёжную программу.</p>
+                </div>
+            </article>
+
+            <!-- ═══════════ НОВОСТЬ 3 ═══════════ -->
+            <article class="news-card" data-category="project">
+                <img class="news-card__image" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="FarEastTech">
+                <div class="news-card__body">
+                    <div class="news-card__meta">
+                        <span class="news-card__tag tag--project">Проект</span>
+                        <span class="news-card__date">20 апреля 2025</span>
+                    </div>
+                    <h2 class="news-card__title">FarEastTech вышел в финал «Старт в инновации»</h2>
+                    <p class="news-card__text">Наш проект FarEastTech — национальный технологический центр микроэлектроники на Дальнем Востоке — вышел в финал международной конференции «Старт в инновации». Впереди — презентация на факультете Высшей школы бизнеса МФТИ.</p>
+                </div>
+            </article>
+
+            <!-- ═══════════ НОВОСТЬ 4 ═══════════ -->
+            <article class="news-card" data-category="project">
+                <img class="news-card__image" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80" alt="Альфа Кризис">
+                <div class="news-card__body">
+                    <div class="news-card__meta">
+                        <span class="news-card__tag tag--project">Проект</span>
+                        <span class="news-card__date">14 февраля 2025</span>
+                    </div>
+                    <h2 class="news-card__title">«Альфа Кризис» победил в треке Альфа-Банка</h2>
+                    <p class="news-card__text">Программа прогнозирования мировых финансово-экономических кризисов с горизонтом 50 лет — совместный проект с Альфа-Банком — заняла первое место в треке банка на всероссийском форуме «Точка Летово».</p>
+                </div>
+            </article>
+
+            <!-- ═══════════ НОВОСТЬ 5 ═══════════ -->
+            <article class="news-card" data-category="speech">
+                <img class="news-card__image" src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=80" alt="Круглый стол">
+                <div class="news-card__body">
+                    <div class="news-card__meta">
+                        <span class="news-card__tag tag--speech">Выступление</span>
+                        <span class="news-card__date">12 ноября 2024</span>
+                    </div>
+                    <h2 class="news-card__title">Круглый стол в МИА «Россия сегодня»</h2>
+                    <p class="news-card__text">Выступил спикером круглого стола в МИА «Россия сегодня», посвящённого поступлению-2026. Обсуждали, как молодые люди выбирают вузы и какие возможности дают президентские платформы.</p>
+                </div>
+            </article>
+
+            <!-- ═══════════ НОВОСТЬ 6 ═══════════ -->
+            <article class="news-card" data-category="personal">
+                <div class="news-card__body">
+                    <div class="news-card__meta">
+                        <span class="news-card__tag tag--personal">Личное</span>
+                        <span class="news-card__date">1 сентября 2024</span>
+                    </div>
+                    <h2 class="news-card__title">Начал вести новостную ленту</h2>
+                    <p class="news-card__text">Запустил этот раздел, чтобы делиться событиями своей жизни — форумами, проектами, выступлениями. Здесь не будет пафоса: только то, что происходит на самом деле.</p>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- ФУТЕР -->
+    <footer class="footer">
+        <div class="footer__ornament">
+            <svg width="180" height="16" viewBox="0 0 180 16">
+                <path d="M10 8 L18 2 L26 8 L18 14 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="18" cy="8" r="1.5" fill="currentColor"/>
+                <path d="M40 8 L48 2 L56 8 L48 14 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="48" cy="8" r="1.5" fill="currentColor"/>
+                <path d="M70 8 L78 2 L86 8 L78 14 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="78" cy="8" r="1.5" fill="currentColor"/>
+                <path d="M100 8 L108 2 L116 8 L108 14 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="108" cy="8" r="1.5" fill="currentColor"/>
+                <path d="M130 8 L138 2 L146 8 L138 14 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="138" cy="8" r="1.5" fill="currentColor"/>
+                <path d="M160 8 L168 2 L176 8 L168 14 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="168" cy="8" r="1.5" fill="currentColor"/>
+            </svg>
+        </div>
+        <p>© 2026 Степан Липочкин. Сделано с любовью к России.</p>
+    </footer>
+
+    <script>
+        // Фильтр новостей
+        var filterButtons = document.querySelectorAll('.filter-btn');
+        var cards = document.querySelectorAll('.news-card');
+
+        for (var i = 0; i < filterButtons.length; i++) {
+            filterButtons[i].addEventListener('click', function() {
+                var filter = this.getAttribute('data-filter');
+
+                for (var j = 0; j < filterButtons.length; j++) {
+                    filterButtons[j].classList.remove('active');
+                }
+                this.classList.add('active');
+
+                for (var k = 0; k < cards.length; k++) {
+                    var cat = cards[k].getAttribute('data-category');
+                    if (filter === 'all' || cat === filter) {
+                        cards[k].style.display = '';
+                    } else {
+                        cards[k].style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Мобильное меню
+        var burger = document.querySelector('.nav__burger');
+        var links = document.querySelector('.nav__links');
+        if (burger) {
+            burger.addEventListener('click', function() {
+                links.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>
